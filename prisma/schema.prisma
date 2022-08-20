@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_CONNECTION_STRING")
+}
+
+enum Language {
+  ENGLISH
+  CZECH
+}
+
+model Article {
+  id                Int      @id @default(autoincrement())
+  language          Language
+  galnetId          String
+  galnetPublishedAt DateTime @default(now())
+  title             String
+  content           String
+  imageName         String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Subscriber {
+  id        Int      @id @default(autoincrement())
+  guildId   String   @unique
+  channelId String
+  language  Language
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

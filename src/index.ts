@@ -28,3 +28,7 @@ BotClient.on('interactionCreate', async (interaction) => {
 })
 
 void BotClient.login(process.env.BOT_TOKEN)
+
+process.on('uncaughtException', (error) => {
+  logger.error('Uncaught exception', error)
+})
