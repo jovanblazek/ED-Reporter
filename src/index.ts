@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, InteractionType } from 'discord.js'
+import { Client, GatewayIntentBits } from 'discord.js'
 import { executeSetupCommand } from './commands/setup'
 import { Commands } from './constants'
 import logger from './utils/logger'
@@ -11,7 +11,7 @@ BotClient.once('ready', () => {
 })
 
 BotClient.on('interactionCreate', async (interaction) => {
-  if (interaction.type !== InteractionType.ApplicationCommand) {
+  if (!interaction.isChatInputCommand()) {
     return
   }
 
