@@ -3,9 +3,9 @@ import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js'
 import { Commands } from '../constants'
 import { Prisma } from '../utils'
 
-export const SetupCommandBuilder = new SlashCommandBuilder()
-  .setName(Commands.SETUP)
-  .setDescription('Setup the bot')
+export const SubscribeCommandBuilder = new SlashCommandBuilder()
+  .setName(Commands.SUBSCRIBE)
+  .setDescription('Subscribe to the galnet news')
   .addChannelOption((option) =>
     option.setName('channel').setDescription('The channel to send the news to').setRequired(true)
   )
@@ -19,7 +19,7 @@ export const SetupCommandBuilder = new SlashCommandBuilder()
       )
   )
 
-export const executeSetupCommand = async ({
+export const executeSubscribeCommand = async ({
   interaction,
 }: {
   interaction: ChatInputCommandInteraction

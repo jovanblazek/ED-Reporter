@@ -1,5 +1,6 @@
 import { Client, GatewayIntentBits } from 'discord.js'
-import { executeSetupCommand } from './commands/setup'
+import { executeSubscribeCommand } from './commands/subscribe'
+import { executeUnsubscribeCommand } from './commands/unsubscribe'
 import { Commands } from './constants'
 import logger from './utils/logger'
 import './config/environment'
@@ -18,8 +19,10 @@ BotClient.on('interactionCreate', async (interaction) => {
   const { commandName } = interaction
 
   try {
-    if (commandName === Commands.SETUP) {
-      await executeSetupCommand({ interaction })
+    if (commandName === Commands.SUBSCRIBE) {
+      await executeSubscribeCommand({ interaction })
+    } else if (commandName === Commands.UNSUBSCRIBE) {
+      await executeUnsubscribeCommand({ interaction })
     }
   } catch (error) {
     await interaction.reply(`Something went wrong 😔`)

@@ -1,3 +1,4 @@
 export const Commands = {
-  SETUP: 'setup',
+  SUBSCRIBE: 'subscribe',
+  UNSUBSCRIBE: 'unsubscribe',
 }
