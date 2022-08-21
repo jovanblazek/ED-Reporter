@@ -18,6 +18,16 @@ export const executeUnsubscribeCommand = async ({
     return
   }
 
+  const record = await Prisma.subscriber.findFirst({
+    where: {
+      guildId,
+    },
+  })
+  if (!record) {
+    await interaction.editReply('You are not subscribed to the news 🤔')
+    return
+  }
+
   await Prisma.subscriber.delete({
     where: {
       guildId,

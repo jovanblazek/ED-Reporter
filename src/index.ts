@@ -9,6 +9,7 @@ const BotClient = new Client({ intents: [GatewayIntentBits.GuildMessages] })
 
 BotClient.once('ready', () => {
   logger.info('Bot is ready!')
+  // await checkForNewArticles()
 })
 
 BotClient.on('interactionCreate', async (interaction) => {
