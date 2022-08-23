@@ -2,7 +2,7 @@ import { Language } from '@prisma/client'
 import got from 'got'
 import logger from './logger'
 import { Prisma } from './prismaClient'
-// import { translateText } from './translator'
+import { translateText } from './translator'
 
 const GALNET_URL =
   'https://cms.zaonce.net/en-GB/jsonapi/node/galnet_article?sort=-created&page%5Blimit%5D=3'
@@ -91,6 +91,10 @@ const saveArticles = async ({
     })
   )
 
+  articlesToSave.sort(
+    (a, b) => new Date(a.galnetPublishedAt).getTime() - new Date(b.galnetPublishedAt).getTime()
+  )
+
   await Prisma.article.createMany({
     data: articlesToSave,
   })
@@ -99,9 +103,10 @@ const saveArticles = async ({
 }
 
 const translateArticlesToCzech = async ({ articles }: { articles: GalnetResponseType['data'] }) => {
+  const isProduction = process.env.NODE_ENV === 'production'
   return Promise.all(
     articles.map(
-      ({
+      async ({
         attributes: {
           title,
           body: { value: content, ...restBody },
@@ -110,11 +115,13 @@ const translateArticlesToCzech = async ({ articles }: { articles: GalnetResponse
         ...rest
       }) => ({
         attributes: {
-          // title: (await translateText('This is a title', 'en', 'cs')) ?? title,
-          title: 'This is a title',
+          title: isProduction
+            ? (await translateText('This is a title', 'en', 'cs')) ?? title
+            : 'This is a title',
           body: {
-            // value: (await translateText('This is a body', 'en', 'cs')) ?? content,
-            value: 'This is a body',
+            value: isProduction
+              ? (await translateText('This is a body', 'en', 'cs')) ?? content
+              : 'This is a body',
             ...restBody,
           },
           ...restAttributes,

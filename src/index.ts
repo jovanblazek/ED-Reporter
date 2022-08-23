@@ -2,14 +2,21 @@ import { Client, GatewayIntentBits } from 'discord.js'
 import { executeSubscribeCommand } from './commands/subscribe'
 import { executeUnsubscribeCommand } from './commands/unsubscribe'
 import { Commands } from './constants'
+import { scheduleCronJob } from './utils'
 import logger from './utils/logger'
 import './config/environment'
 
+const SCHEDULE = {
+  DAY: '5 8-18 * * *',
+  NIGHT: '5 21,0-6/3 * * *',
+}
+
 const BotClient = new Client({ intents: [GatewayIntentBits.GuildMessages] })
 
-BotClient.once('ready', () => {
+BotClient.once('ready', (client) => {
   logger.info('Bot is ready!')
-  // await checkForNewArticles()
+  scheduleCronJob({ schedule: SCHEDULE.DAY, client })
+  scheduleCronJob({ schedule: SCHEDULE.NIGHT, client })
 })
 
 BotClient.on('interactionCreate', async (interaction) => {
