@@ -1,10 +1,12 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js'
+import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 import { Commands } from '../constants'
 import { Prisma } from '../utils'
 
 export const UnsubscribeCommandBuilder = new SlashCommandBuilder()
   .setName(Commands.UNSUBSCRIBE)
-  .setDescription('Unsubscribe from the news')
+  .setDescription('Unsubscribe from the Galnet news')
+  .setDMPermission(false)
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 
 export const executeUnsubscribeCommand = async ({
   interaction,

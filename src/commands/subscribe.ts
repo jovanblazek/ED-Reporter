@@ -1,11 +1,13 @@
 import { Language } from '@prisma/client'
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js'
+import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js'
 import { Commands } from '../constants'
 import { Prisma } from '../utils'
 
 export const SubscribeCommandBuilder = new SlashCommandBuilder()
   .setName(Commands.SUBSCRIBE)
-  .setDescription('Subscribe to the galnet news')
+  .setDescription('Subscribe to the Galnet news')
+  .setDMPermission(false)
+  .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
   .addChannelOption((option) =>
     option.setName('channel').setDescription('The channel to send the news to').setRequired(true)
   )

@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits } from 'discord.js'
+import { ActivityType, Client, GatewayIntentBits } from 'discord.js'
 import { executeSubscribeCommand } from './commands/subscribe'
 import { executeUnsubscribeCommand } from './commands/unsubscribe'
 import { Commands } from './constants'
@@ -15,6 +15,7 @@ const BotClient = new Client({ intents: [GatewayIntentBits.GuildMessages] })
 
 BotClient.once('ready', (client) => {
   logger.info('Bot is ready!')
+  client.user.setActivity('Galnet', { type: ActivityType.Watching })
   scheduleCronJob({ schedule: SCHEDULE.DAY, client })
   scheduleCronJob({ schedule: SCHEDULE.NIGHT, client })
 })
