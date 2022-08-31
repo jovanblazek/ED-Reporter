@@ -1,25 +1,27 @@
 {
   "name": "ed-reporter",
   "version": "1.0.0",
-  "description": "",
+  "description": "Discord bot for reporting Galnet news",
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only --exit-child src/index.ts",
-    "register-commands": "ts-node src/utils/registerCommands.ts"
+    "register-commands": "ts-node src/utils/registerCommands.ts",
+    "migrate": "prisma migrate deploy",
+    "build": "tsc",
+    "start": "cd build && node src/index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jovanblazek/ED-Reporter.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "jovanblazek",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/jovanblazek/ED-Reporter/issues"
   },
   "homepage": "https://github.com/jovanblazek/ED-Reporter#readme",
   "devDependencies": {
     "@sudolabs-io/eslint-config-sudolabs": "^1.5.66",
-    "@tsconfig/node16": "^1.0.3",
     "@types/node": "^18.7.6",
     "@types/node-cron": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "^5.33.1",
