@@ -48,7 +48,7 @@ Reporter can be setup just once per server.
 4. Run `docker-compose up` to start the DB.
 5. Run `npm run migrate` to create the tables.
 6. Install the dependencies with `npm install`.
-7. Run `npm run register-commands` to register the commands on your testing server.
+7. Run `npm run register-commands dev` to register the commands on your testing server.
 8. Run `npm run dev` to start the bot.
 
 ## 💿 Migrations

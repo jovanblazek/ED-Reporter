@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only --exit-child src/index.ts",
-    "register-commands": "ts-node src/utils/registerCommands.ts",
+    "register-commands:dev": "ts-node src/utils/registerCommands.ts dev",
+    "register-commands:prod": "ts-node src/utils/registerCommands.ts prod",
     "migrate": "prisma migrate deploy",
     "build": "tsc",
     "start": "cd build && node src/index.js"
