@@ -10,8 +10,11 @@ export const scheduleCronJob = ({ schedule, client }: { schedule: string; client
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     async () => {
       logger.info('CRON running')
-      await checkForNewArticles()
-      await reportNews({ client })
+      const newArticleGalnetIds = await checkForNewArticles()
+      if (!newArticleGalnetIds) {
+        return
+      }
+      await reportNews({ client, newArticleGalnetIds })
     },
     {
       timezone: 'UTC',

@@ -132,7 +132,7 @@ export const checkForNewArticles = async () => {
     const lastArticleGalnetId = await getLastArticleGalnetId()
     const galnetArticles = await fetchGalnet()
     if (!galnetArticles) {
-      return
+      return null
     }
 
     const newArticles = filterNewArticles({
@@ -140,8 +140,7 @@ export const checkForNewArticles = async () => {
       articles: galnetArticles,
     })
     if (!newArticles.length) {
-      logger.info('No new articles')
-      return
+      return null
     }
 
     await saveArticles({
@@ -157,7 +156,10 @@ export const checkForNewArticles = async () => {
       articles: czechArticles,
       language: Language.CZECH,
     })
+
+    return newArticles.map(({ attributes: { field_galnet_guid } }) => field_galnet_guid)
   } catch (error) {
     logger.error('Error while checking for new articles', error)
+    return null
   }
 }

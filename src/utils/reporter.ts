@@ -17,12 +17,18 @@ const createEmbed = ({ title, content, imageName, galnetId, galnetPublishedAt }:
     })
 }
 
-export const reportNews = async ({ client }: { client: Client }) => {
-  // get articles from past hour
+export const reportNews = async ({
+  client,
+  newArticleGalnetIds,
+}: {
+  client: Client
+  newArticleGalnetIds: string[]
+}) => {
+  // get new articles
   const articles = await Prisma.article.findMany({
     where: {
-      createdAt: {
-        gt: new Date(Date.now() - 3600000),
+      galnetId: {
+        in: newArticleGalnetIds,
       },
     },
   })
