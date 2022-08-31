@@ -2,7 +2,7 @@ import { ActivityType, Client, GatewayIntentBits } from 'discord.js'
 import { executeSubscribeCommand } from './commands/subscribe'
 import { executeUnsubscribeCommand } from './commands/unsubscribe'
 import { Commands } from './constants'
-import { scheduleCronJob } from './utils'
+import { Prisma, scheduleCronJob } from './utils'
 import logger from './utils/logger'
 import './config/environment'
 
@@ -11,7 +11,9 @@ const SCHEDULE = {
   NIGHT: '5 21,0-6/3 * * *',
 }
 
-const BotClient = new Client({ intents: [GatewayIntentBits.GuildMessages] })
+const BotClient = new Client({
+  intents: [GatewayIntentBits.GuildMessages, GatewayIntentBits.Guilds],
+})
 
 BotClient.once('ready', (client) => {
   logger.info('Bot is ready!')
@@ -37,6 +39,18 @@ BotClient.on('interactionCreate', async (interaction) => {
     await interaction.reply(`Something went wrong 😔`)
     logger.error('Error while handling command', error)
   }
+})
+BotClient.on('guildDelete', async (guild) => {
+  logger.info(`Left guild ${guild.name} (${guild.id})`)
+  // Try catch because prisma does not have delete if exists
+  try {
+    await Prisma.subscriber.delete({
+      where: {
+        guildId: guild.id,
+      },
+    })
+    // eslint-disable-next-line no-empty
+  } catch {}
 })
 
 void BotClient.login(process.env.BOT_TOKEN)
