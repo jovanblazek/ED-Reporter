@@ -9,6 +9,9 @@ export const translateText = async (
   from: SourceLanguageCode | null,
   to: TargetLanguageCode
 ) => {
+  if (process.env.NODE_ENV !== 'production') {
+    return `[Target: ${to}] ${text}`
+  }
   try {
     const translatedText = await Translator.translateText(text, from, to)
     return translatedText.text

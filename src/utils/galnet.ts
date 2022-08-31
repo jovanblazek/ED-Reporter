@@ -103,7 +103,6 @@ const saveArticles = async ({
 }
 
 const translateArticlesToCzech = async ({ articles }: { articles: GalnetResponseType['data'] }) => {
-  const isProduction = process.env.NODE_ENV === 'production'
   return Promise.all(
     articles.map(
       async ({
@@ -115,13 +114,9 @@ const translateArticlesToCzech = async ({ articles }: { articles: GalnetResponse
         ...rest
       }) => ({
         attributes: {
-          title: isProduction
-            ? (await translateText('This is a title', 'en', 'cs')) ?? title
-            : 'This is a title',
+          title: (await translateText(title, 'en', 'cs')) ?? title,
           body: {
-            value: isProduction
-              ? (await translateText('This is a body', 'en', 'cs')) ?? content
-              : 'This is a body',
+            value: (await translateText(content, 'en', 'cs')) ?? content,
             ...restBody,
           },
           ...restAttributes,

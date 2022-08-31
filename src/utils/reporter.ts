@@ -12,7 +12,8 @@ const createEmbed = ({ title, content, imageName, galnetId, galnetPublishedAt }:
     .setTimestamp(galnetPublishedAt)
     .setFooter({
       text: 'Galnet',
-      iconURL: 'https://edassets.org/static/img/companies/GalNet.png',
+      iconURL:
+        'https://cdn.discordapp.com/attachments/1009111578903318608/1014540923364987002/reporter-logo.png',
     })
 }
 
