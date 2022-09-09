@@ -2,7 +2,8 @@
   "root": true,
   "extends": [
     "@sudolabs-io/eslint-config-sudolabs/typescript",
-    "@sudolabs-io/eslint-config-sudolabs/with/prettier"
+    "@sudolabs-io/eslint-config-sudolabs/with/prettier",
+    "@sudolabs-io/eslint-config-sudolabs/with/jest"
   ],
   "rules": {
     "@typescript-eslint/naming-convention": [
