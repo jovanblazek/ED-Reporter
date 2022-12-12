@@ -1,48 +1,52 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/naming-convention */
+import once from 'lodash/once'
 import { createLogger, format, transports } from 'winston'
-import '../config/environment'
+
+const { NODE_ENV } = process.env
 
 type LogItem = {
   level: string
   message: string
-  data?: Record<any, any>
+  data?: Record<string, unknown>
   error?: string
   timestamp?: string
 }
 
-const formatData = (item: LogItem) => (item.data ? ` - ${JSON.stringify(item.data)}` : '')
+const TIMESTAMP_FORMAT = { format: 'YYYY-MM-DD HH:mm:ss' }
+
+const formatData = (item: LogItem) => {
+  const { level, message, timestamp, ...rest } = item
+  const stringifiedRest = JSON.stringify(rest, null, '  ')
+  return stringifiedRest !== '{}' ? `\n\x1b[32mAdditional data:\x1b[39m\n${stringifiedRest}` : ''
+}
 const formatError = (item: LogItem) => (item.error ? ` - ${item.error}` : '')
 
-const initLogger = () => {
-  if (process.env.NODE_ENV !== 'development') {
-    return createLogger({
-      level: process.env.LOG_LEVEL || 'debug',
-    })
-  }
-  return createLogger({
+const consoleFormatter = format.combine(
+  format.colorize(),
+  format.timestamp(TIMESTAMP_FORMAT),
+  format.printf(
+    (item: LogItem) =>
+      `${item.timestamp || ''} [${item.level}]: ${item.message}${formatData(item)}${formatError(
+        item
+      )}`
+  )
+)
+
+const initLogger = once(() =>
+  createLogger({
     level: 'debug',
-    format: format.combine(
-      format.colorize(),
-      format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-      format.printf(
-        (item: LogItem) =>
-          `${item.timestamp || ''} [${item.level}]: ${item.message}${formatData(item)}${formatError(
-            item
-          )}`
-      )
-    ),
+    format: consoleFormatter,
     transports: [new transports.Console()],
+    silent: NODE_ENV === 'test',
   })
-}
+)
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-const logger = initLogger()
+const loggerInstance = initLogger()
 
-export default {
-  /* eslint-disable */
-  debug: (message: string, ...args: any) => logger.debug(message, ...args),
-  info: (message: string, info?: Object | unknown, ...args: any) => logger.info(message, info, ...args),
-  warn: (message: string, ...args: any) => logger.warn(message, ...args),
-  error: (message: string, error?: Object | unknown, ...args: any) => logger.error(message, error, ...args),
-  /* eslint-enable */
+const logger = {
+  debug: loggerInstance.debug.bind(loggerInstance),
+  info: loggerInstance.info.bind(loggerInstance),
+  warn: loggerInstance.warn.bind(loggerInstance),
+  error: loggerInstance.error.bind(loggerInstance),
 }
+export default logger
