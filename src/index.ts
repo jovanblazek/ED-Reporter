@@ -1,4 +1,5 @@
 import { ActivityType, Client, GatewayIntentBits } from 'discord.js'
+import Koa from 'koa'
 import { executeSubscribeCommand } from './commands/subscribe'
 import { executeUnsubscribeCommand } from './commands/unsubscribe'
 import { Commands } from './constants'
@@ -57,4 +58,16 @@ void BotClient.login(process.env.BOT_TOKEN)
 
 process.on('uncaughtException', (error) => {
   logger.error('Uncaught exception', error)
+})
+
+// Server used as a health check for the bot
+const KoaApp = new Koa()
+KoaApp.use((ctx) => {
+  ctx.body = {
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+  }
+})
+KoaApp.listen(process.env.PORT, () => {
+  logger.info(`Koa server is running on port ${process.env.PORT!}`)
 })
